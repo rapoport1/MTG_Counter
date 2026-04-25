@@ -28,9 +28,9 @@ export default function App() {
   }
 
   return (
-    <div style={{ minHeight: '760px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', background: '#DAD5CA', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      <div style={{ width: 380, maxWidth: '100%', height: 720, background: theme.bg, borderRadius: 36, overflow: 'hidden', transition: 'background 0.3s ease', border: '1px solid rgba(0,0,0,0.12)' }}>
-        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div style={styles.appWrapper}>
+      <div style={{ ...styles.appContainer, background: theme.bg }}>
+        <div style={styles.appRelative}>
           {screen === 'landing' && (
             <Landing onStart={() => setScreen('player-setup')} onSettings={() => setScreen('settings')} />
           )}
@@ -48,3 +48,29 @@ export default function App() {
     </div>
   );
 }
+
+const styles = {
+  appWrapper: {
+    minHeight: '760px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '20px',
+    background: '#DAD5CA',
+    fontFamily: 'system-ui, -apple-system, sans-serif'
+  },
+  appContainer: {
+    width: 380,
+    maxWidth: '100%',
+    height: 720,
+    borderRadius: 36,
+    overflow: 'hidden',
+    transition: 'background 0.3s ease',
+    border: '1px solid rgba(0,0,0,0.12)'
+  },
+  appRelative: {
+    width: '100%',
+    height: '100%',
+    position: 'relative'
+  }
+};

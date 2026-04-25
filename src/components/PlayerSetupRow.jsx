@@ -22,68 +22,68 @@ export function PlayerSetupRow({ player, onUpdate }) {
     setSearchingSlot(null);
   }
 
+  const renderCommanderTag = (commander, slotKey) => (
+    <div style={{ ...styles.tagContainer, background: 'rgba(0,0,0,0.1)', border: `0.5px solid ${theme.surfaceBorder}` }}>
+      {commander.smallUrl ? (
+        <div style={{ ...styles.tagImage, backgroundImage: `url(${commander.smallUrl})` }} />
+      ) : (
+        <div style={{ ...styles.tagPlaceholder, background: color.hex }} />
+      )}
+      <span style={{ ...styles.tagName, color: theme.text }}>{commander.name}</span>
+      <button onClick={() => {
+        if (slotKey === 'commander') {
+          onUpdate({ commander: null, partner: null });
+        } else {
+          onUpdate({ partner: null });
+        }
+      }} style={{ ...styles.clearButton, color: theme.textDim }}>
+        <X size={12} />
+      </button>
+    </div>
+  );
+
   return (
     <div style={{
+      ...styles.rowContainer,
       background: theme.surface,
       border: `0.5px solid ${theme.surfaceBorder}`,
-      borderLeft: `3px solid ${color.hex}`,
-      borderRadius: 8,
-      padding: 10,
-      marginBottom: 8
+      borderLeft: `3px solid ${color.hex}`
     }}>
-      <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+      <div style={styles.inputGroup}>
         <button
           onClick={cycleColor}
           aria-label="Change player color"
-          style={{ width: 26, height: 26, borderRadius: '50%', background: color.hex, border: '2px solid rgba(255,255,255,0.6)', cursor: 'pointer', flexShrink: 0, padding: 0 }}
+          style={{ ...styles.colorCycleButton, background: color.hex }}
         />
         <input
           type="text"
           value={player.name}
           onChange={(e) => onUpdate({ name: e.target.value })}
           maxLength={20}
-          style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: theme.text, fontSize: 14, fontWeight: 500, fontFamily: theme.font, minWidth: 0, padding: '4px 0' }}
+          style={{ ...styles.nameInput, color: theme.text, fontFamily: theme.font }}
         />
       </div>
-      <div style={{ marginTop: 8 }}>
+      
+      <div style={styles.commanderSection}>
         {player.commander ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 4, background: 'rgba(0,0,0,0.1)', border: `0.5px solid ${theme.surfaceBorder}`, borderRadius: 6 }}>
-            {player.commander.smallUrl ? (
-              <div style={{ width: 26, height: 26, borderRadius: 4, background: `url(${player.commander.smallUrl}) center/cover`, flexShrink: 0 }} />
-            ) : (
-              <div style={{ width: 26, height: 26, borderRadius: 4, background: color.hex, flexShrink: 0 }} />
-            )}
-            <span style={{ fontSize: 12, color: theme.text, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{player.commander.name}</span>
-            <button onClick={() => onUpdate({ commander: null, partner: null })} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: theme.textDim, padding: 2, display: 'flex' }}>
-              <X size={12} />
-            </button>
-          </div>
+          renderCommanderTag(player.commander, 'commander')
         ) : searchingSlot === 'commander' ? (
           <CommanderSearch onSelect={(c) => handleSelect('commander', c)} onCancel={() => setSearchingSlot(null)} />
         ) : (
-          <button onClick={() => setSearchingSlot('commander')} style={{ background: 'transparent', border: `0.5px dashed ${theme.surfaceBorder}`, color: theme.textMuted, fontSize: 11, padding: '6px 10px', borderRadius: 6, cursor: 'pointer', fontFamily: theme.font, width: '100%', textAlign: 'left' }}>
+          <button onClick={() => setSearchingSlot('commander')} style={{ ...styles.addButton, border: `0.5px dashed ${theme.surfaceBorder}`, color: theme.textMuted, fontFamily: theme.font }}>
             + Add commander
           </button>
         )}
       </div>
+
       {partnerEnabled && player.commander && (
-        <div style={{ marginTop: 6 }}>
+        <div style={styles.partnerSection}>
           {player.partner ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 4, background: 'rgba(0,0,0,0.1)', border: `0.5px solid ${theme.surfaceBorder}`, borderRadius: 6 }}>
-              {player.partner.smallUrl ? (
-                <div style={{ width: 26, height: 26, borderRadius: 4, background: `url(${player.partner.smallUrl}) center/cover`, flexShrink: 0 }} />
-              ) : (
-                <div style={{ width: 26, height: 26, borderRadius: 4, background: color.hex, flexShrink: 0 }} />
-              )}
-              <span style={{ fontSize: 12, color: theme.text, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{player.partner.name}</span>
-              <button onClick={() => onUpdate({ partner: null })} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: theme.textDim, padding: 2, display: 'flex' }}>
-                <X size={12} />
-              </button>
-            </div>
+            renderCommanderTag(player.partner, 'partner')
           ) : searchingSlot === 'partner' ? (
             <CommanderSearch onSelect={(c) => handleSelect('partner', c)} onCancel={() => setSearchingSlot(null)} />
           ) : (
-            <button onClick={() => setSearchingSlot('partner')} style={{ background: 'transparent', border: `0.5px dashed ${theme.surfaceBorder}`, color: theme.textMuted, fontSize: 11, padding: '6px 10px', borderRadius: 6, cursor: 'pointer', fontFamily: theme.font, width: '100%', textAlign: 'left' }}>
+            <button onClick={() => setSearchingSlot('partner')} style={{ ...styles.addButton, border: `0.5px dashed ${theme.surfaceBorder}`, color: theme.textMuted, fontFamily: theme.font }}>
               + Add partner commander
             </button>
           )}
@@ -92,3 +92,86 @@ export function PlayerSetupRow({ player, onUpdate }) {
     </div>
   );
 }
+
+const styles = {
+  rowContainer: {
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 8
+  },
+  inputGroup: {
+    display: 'flex',
+    gap: 10,
+    alignItems: 'center'
+  },
+  colorCycleButton: {
+    width: 26,
+    height: 26,
+    borderRadius: '50%',
+    border: '2px solid rgba(255,255,255,0.6)',
+    cursor: 'pointer',
+    flexShrink: 0,
+    padding: 0
+  },
+  nameInput: {
+    flex: 1,
+    background: 'transparent',
+    border: 'none',
+    outline: 'none',
+    fontSize: 14,
+    fontWeight: 500,
+    minWidth: 0,
+    padding: '4px 0'
+  },
+  commanderSection: {
+    marginTop: 8
+  },
+  partnerSection: {
+    marginTop: 6
+  },
+  tagContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    padding: 4,
+    borderRadius: 6
+  },
+  tagImage: {
+    width: 26,
+    height: 26,
+    borderRadius: 4,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    flexShrink: 0
+  },
+  tagPlaceholder: {
+    width: 26,
+    height: 26,
+    borderRadius: 4,
+    flexShrink: 0
+  },
+  tagName: {
+    fontSize: 12,
+    flex: 1,
+    minWidth: 0,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
+  },
+  clearButton: {
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 2,
+    display: 'flex'
+  },
+  addButton: {
+    background: 'transparent',
+    fontSize: 11,
+    padding: '6px 10px',
+    borderRadius: 6,
+    cursor: 'pointer',
+    width: '100%',
+    textAlign: 'left'
+  }
+};

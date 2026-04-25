@@ -57,17 +57,10 @@ export function PlayerPanel({ player, displayDelta, rotated, onLifeTick, onTryDi
   return (
     <div
       style={{
-        position: 'relative',
-        borderRadius: 14,
-        overflow: 'hidden',
+        ...styles.container,
         border: `1px solid ${color.border}`,
         transform: rotated ? 'rotate(180deg)' : 'none',
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        WebkitTapHighlightColor: 'transparent',
-        touchAction: 'manipulation',
         filter: isDead ? 'grayscale(0.85) brightness(0.55)' : 'none',
-        transition: 'filter 0.4s ease',
         animation: pulseAnim,
         gridArea: area,
         ...panelBg
@@ -78,41 +71,40 @@ export function PlayerPanel({ player, displayDelta, rotated, onLifeTick, onTryDi
           <button
             {...plusHandlers}
             aria-label={`Increase ${player.name} life`}
-            style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '50%', background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation', zIndex: 2 }}
+            style={styles.tapAreaTop}
           />
           <button
             {...minusHandlers}
             aria-label={`Decrease ${player.name} life`}
-            style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%', background: 'transparent', border: 'none', cursor: 'pointer', touchAction: 'manipulation', zIndex: 2 }}
+            style={styles.tapAreaBottom}
           />
         </>
       )}
 
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', padding: 8, color: textColor, textShadow, zIndex: 3 }}>
-        <div style={{ fontSize: 11, fontWeight: 500, opacity: 0.9, letterSpacing: 0.5, marginBottom: 2, maxWidth: '90%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+      <div style={{ ...styles.content, color: textColor, textShadow }}>
+        <div style={styles.playerName}>
           {player.name}
         </div>
+        
         {isDead ? (
           <>
-            <Skull size={42} strokeWidth={1.4} style={{ marginTop: 6, marginBottom: 6, opacity: 0.7 }} />
-            <div style={{ fontSize: 10, opacity: 0.55, letterSpacing: 1.4 }}>ELIMINATED</div>
+            <Skull size={42} strokeWidth={1.4} style={styles.skull} />
+            <div style={styles.eliminatedText}>ELIMINATED</div>
           </>
         ) : (
           <>
             <div style={{
-              height: 22, fontSize: 17, fontWeight: 500,
+              ...styles.deltaText,
               color: deltaColor,
               textShadow: bgImage ? '0 1px 3px rgba(0,0,0,0.6)' : 'none',
-              opacity: hasDelta ? 1 : 0,
-              transition: 'opacity 0.2s ease',
-              fontVariantNumeric: 'tabular-nums'
+              opacity: hasDelta ? 1 : 0
             }}>
               {hasDelta ? (displayDelta > 0 ? `+${displayDelta}` : `${displayDelta}`) : '+0'}
             </div>
-            <div style={{ fontSize: 64, fontWeight: 500, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+            <div style={styles.lifeText}>
               {player.life}
             </div>
-            <div style={{ fontSize: 9, opacity: 0.8, marginTop: 10, letterSpacing: 0.5 }}>
+            <div style={styles.statsText}>
               CMD {highestCmd}{poisonEnabled ? ` · POI ${player.poison || 0}` : ''}
             </div>
           </>
@@ -121,3 +113,91 @@ export function PlayerPanel({ player, displayDelta, rotated, onLifeTick, onTryDi
     </div>
   );
 }
+
+const styles = {
+  container: {
+    position: 'relative',
+    borderRadius: 14,
+    overflow: 'hidden',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    WebkitTapHighlightColor: 'transparent',
+    touchAction: 'manipulation',
+    transition: 'filter 0.4s ease'
+  },
+  tapAreaTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '50%',
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    touchAction: 'manipulation',
+    zIndex: 2
+  },
+  tapAreaBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '50%',
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    touchAction: 'manipulation',
+    zIndex: 2
+  },
+  content: {
+    position: 'absolute',
+    inset: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
+    padding: 8,
+    zIndex: 3
+  },
+  playerName: {
+    fontSize: 11,
+    fontWeight: 500,
+    opacity: 0.9,
+    letterSpacing: 0.5,
+    marginBottom: 2,
+    maxWidth: '90%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
+  },
+  skull: {
+    marginTop: 6,
+    marginBottom: 6,
+    opacity: 0.7
+  },
+  eliminatedText: {
+    fontSize: 10,
+    opacity: 0.55,
+    letterSpacing: 1.4
+  },
+  deltaText: {
+    height: 22,
+    fontSize: 17,
+    fontWeight: 500,
+    transition: 'opacity 0.2s ease',
+    fontVariantNumeric: 'tabular-nums'
+  },
+  lifeText: {
+    fontSize: 64,
+    fontWeight: 500,
+    lineHeight: 1,
+    fontVariantNumeric: 'tabular-nums'
+  },
+  statsText: {
+    fontSize: 9,
+    opacity: 0.8,
+    marginTop: 10,
+    letterSpacing: 0.5
+  }
+};

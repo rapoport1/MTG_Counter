@@ -37,51 +37,143 @@ export function CommanderSearch({ onSelect, onCancel }) {
   const showBanner = state.source === 'popular' && state.error === 'unreachable' && debouncedQuery.trim().length >= 2;
 
   return (
-    <div style={{ padding: '4px 0' }}>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', background: theme.surface, border: `0.5px solid ${theme.surfaceBorder}`, borderRadius: 6, padding: '6px 10px' }}>
-        <Search size={13} strokeWidth={1.5} style={{ color: theme.textDim, flexShrink: 0 }} />
+    <div style={styles.container}>
+      <div style={{ ...styles.inputWrapper, background: theme.surface, border: `0.5px solid ${theme.surfaceBorder}` }}>
+        <Search size={13} strokeWidth={1.5} style={{ ...styles.searchIcon, color: theme.textDim }} />
         <input
           type="text" value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search commanders..."
           autoFocus
-          style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: theme.text, fontSize: 12, fontFamily: theme.font, minWidth: 0 }}
+          style={{ ...styles.input, color: theme.text, fontFamily: theme.font }}
         />
-        <button onClick={onCancel} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: theme.textDim, padding: 2, display: 'flex' }}>
+        <button onClick={onCancel} style={{ ...styles.cancelButton, color: theme.textDim }}>
           <X size={13} />
         </button>
       </div>
-      {state.loading && <div style={{ fontSize: 11, color: theme.textDim, textAlign: 'center', padding: '8px 0' }}>Searching...</div>}
+
+      {state.loading && <div style={{ ...styles.message, color: theme.textDim }}>Searching...</div>}
+      
       {!state.loading && showBanner && (
-        <div style={{ fontSize: 10, color: theme.textDim, padding: '6px 2px 0' }}>Scryfall unreachable — showing popular matches</div>
+        <div style={{ ...styles.banner, color: theme.textDim }}>Scryfall unreachable — showing popular matches</div>
       )}
+      
       {!state.loading && state.source === 'popular' && debouncedQuery.trim().length === 0 && state.results.length > 0 && (
-        <div style={{ fontSize: 10, color: theme.textDim, padding: '6px 2px 0', letterSpacing: 0.5 }}>POPULAR COMMANDERS</div>
+        <div style={{ ...styles.popularLabel, color: theme.textDim }}>POPULAR COMMANDERS</div>
       )}
+      
       {!state.loading && state.results.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 6, maxHeight: 180, overflowY: 'auto' }}>
+        <div style={styles.resultsList}>
           {state.results.map((r) => (
             <button key={r.id} onClick={() => onSelect(r)} style={{
-              display: 'flex', alignItems: 'center', gap: 8, padding: 5,
-              background: theme.surface, border: `0.5px solid ${theme.surfaceBorder}`,
-              borderRadius: 6, cursor: 'pointer', fontFamily: theme.font, color: theme.text, textAlign: 'left'
+              ...styles.resultButton,
+              background: theme.surface,
+              border: `0.5px solid ${theme.surfaceBorder}`,
+              fontFamily: theme.font,
+              color: theme.text
             }}>
               {r.smallUrl ? (
-                <div style={{ width: 28, height: 28, borderRadius: 4, background: `url(${r.smallUrl}) center/cover`, flexShrink: 0 }} />
+                <div style={{ ...styles.resultImage, backgroundImage: `url(${r.smallUrl})` }} />
               ) : (
-                <div style={{ width: 28, height: 28, borderRadius: 4, background: `${theme.accentBg}`, border: `0.5px solid ${theme.surfaceBorder}`, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: theme.textDim, fontSize: 11 }}>?</div>
+                <div style={{ ...styles.resultImagePlaceholder, background: theme.accentBg, border: `0.5px solid ${theme.surfaceBorder}`, color: theme.textDim }}>?</div>
               )}
-              <span style={{ fontSize: 12, flex: 1 }}>{r.name}</span>
+              <span style={styles.resultName}>{r.name}</span>
             </button>
           ))}
         </div>
       )}
+      
       {!state.loading && state.results.length === 0 && debouncedQuery.trim().length >= 2 && (
-        <div style={{ fontSize: 11, color: theme.textDim, textAlign: 'center', padding: '8px 0' }}>No matches</div>
+        <div style={{ ...styles.message, color: theme.textDim }}>No matches</div>
       )}
+      
       {!state.loading && debouncedQuery.trim().length === 1 && (
-        <div style={{ fontSize: 11, color: theme.textDim, textAlign: 'center', padding: '8px 0' }}>Keep typing...</div>
+        <div style={{ ...styles.message, color: theme.textDim }}>Keep typing...</div>
       )}
     </div>
   );
 }
+
+const styles = {
+  container: {
+    padding: '4px 0'
+  },
+  inputWrapper: {
+    display: 'flex',
+    gap: 8,
+    alignItems: 'center',
+    borderRadius: 6,
+    padding: '6px 10px'
+  },
+  searchIcon: {
+    flexShrink: 0
+  },
+  input: {
+    flex: 1,
+    background: 'transparent',
+    border: 'none',
+    outline: 'none',
+    fontSize: 12,
+    minWidth: 0
+  },
+  cancelButton: {
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 2,
+    display: 'flex'
+  },
+  message: {
+    fontSize: 11,
+    textAlign: 'center',
+    padding: '8px 0'
+  },
+  banner: {
+    fontSize: 10,
+    padding: '6px 2px 0'
+  },
+  popularLabel: {
+    fontSize: 10,
+    padding: '6px 2px 0',
+    letterSpacing: 0.5
+  },
+  resultsList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+    marginTop: 6,
+    maxHeight: 180,
+    overflowY: 'auto'
+  },
+  resultButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    padding: 5,
+    borderRadius: 6,
+    cursor: 'pointer',
+    textAlign: 'left'
+  },
+  resultImage: {
+    width: 28,
+    height: 28,
+    borderRadius: 4,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    flexShrink: 0
+  },
+  resultImagePlaceholder: {
+    width: 28,
+    height: 28,
+    borderRadius: 4,
+    flexShrink: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 11
+  },
+  resultName: {
+    fontSize: 12,
+    flex: 1
+  }
+};
