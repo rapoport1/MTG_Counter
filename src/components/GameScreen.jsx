@@ -37,46 +37,51 @@ export function GameScreen({ initialPlayers, onEndGame }) {
               rotated={slot.rotated}
               area={slot.area}
               onLifeTick={(delta) => actions.onLifeTick(p.id, delta)}
+              onPoisonTick={(delta) => actions.onPoisonTick(p.id, delta)}
+              onCommanderDamageTick={(sourceId, isPartner, delta) => actions.onCommanderDamageTick(p.id, sourceId, isPartner, delta)}
               onTryDie={() => actions.tryDie(p.id)}
+              allPlayers={players}
             />
           );
         })}
       </div>
 
-      <div style={{ ...styles.centerMenu, background: theme.bg, border: `0.5px solid ${theme.surfaceBorder}` }}>
-        <button
-          onClick={actions.undo}
-          disabled={!canUndo}
-          style={{
-            ...styles.iconButton,
-            color: theme.textMuted,
-            cursor: !canUndo ? 'not-allowed' : 'pointer',
-            opacity: !canUndo ? 0.35 : 1
-          }}
-          aria-label="Undo"
-        >
-          <Undo2 size={15} strokeWidth={1.75} />
-        </button>
-        <button
-          disabled
-          style={{
-            ...styles.iconButton,
-            color: theme.textMuted,
-            cursor: 'not-allowed',
-            opacity: 0.35
-          }}
-          aria-label="AI Judge (coming soon)"
-          title="AI Judge — coming soon"
-        >
-          <Scale size={15} strokeWidth={1.75} />
-        </button>
-        <button
-          onClick={() => setMenuOpen(true)}
-          style={{ ...styles.iconButton, color: theme.textMuted, cursor: 'pointer' }}
-          aria-label="Menu"
-        >
-          <MoreHorizontal size={15} strokeWidth={1.75} />
-        </button>
+      <div style={{ ...styles.centerMenuWrapper, pointerEvents: 'none', ...(players.length === 1 ? { justifyContent: 'flex-end', paddingBottom: 60 } : {}) }}>
+        <div style={{ ...styles.centerMenu, background: theme.bg, border: `0.5px solid ${theme.surfaceBorder}`, pointerEvents: 'auto' }}>
+          <button
+            onClick={actions.undo}
+            disabled={!canUndo}
+            style={{
+              ...styles.iconButton,
+              color: theme.textMuted,
+              cursor: !canUndo ? 'not-allowed' : 'pointer',
+              opacity: !canUndo ? 0.35 : 1
+            }}
+            aria-label="Undo"
+          >
+            <Undo2 size={15} strokeWidth={1.75} />
+          </button>
+          <button
+            disabled
+            style={{
+              ...styles.iconButton,
+              color: theme.textMuted,
+              cursor: 'not-allowed',
+              opacity: 0.35
+            }}
+            aria-label="AI Judge (coming soon)"
+            title="AI Judge — coming soon"
+          >
+            <Scale size={15} strokeWidth={1.75} />
+          </button>
+          <button
+            onClick={() => setMenuOpen(true)}
+            style={{ ...styles.iconButton, color: theme.textMuted, cursor: 'pointer' }}
+            aria-label="Menu"
+          >
+            <MoreHorizontal size={15} strokeWidth={1.75} />
+          </button>
+        </div>
       </div>
 
       {menuOpen && (
@@ -120,17 +125,22 @@ const styles = {
     display: 'grid',
     gap: 6
   },
-  centerMenu: {
+  centerMenuWrapper: {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    inset: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
+    zIndex: 10
+  },
+  centerMenu: {
     borderRadius: 999,
     padding: '6px 8px',
     display: 'flex',
     gap: 4,
     alignItems: 'center',
-    zIndex: 10
+    pointerEvents: 'auto'
   },
   iconButton: {
     background: 'transparent',

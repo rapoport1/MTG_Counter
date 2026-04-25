@@ -10,12 +10,7 @@ export const Landing = ({ onStart, onSettings }) => {
     <div style={{ ...styles.container, color: theme.text, fontFamily: theme.font }}>
       <ThemeDecoration theme={theme} />
       <div style={styles.content}>
-        <div style={styles.header}>
-          <span style={{ ...styles.time, color: theme.textDim }}>9:41</span>
-          <button onClick={onSettings} style={{ ...styles.iconButton, color: theme.textMuted }} aria-label="Settings">
-            <SettingsIcon size={18} strokeWidth={1.5} />
-          </button>
-        </div>
+
         <div style={styles.titleSection}>
           <div style={{ ...styles.title, color: theme.text }}>MTG Life</div>
           <div style={{ ...styles.subtitle, color: theme.textMuted, fontStyle: theme.name === 'Fantasy' ? 'italic' : 'normal' }}>
@@ -37,16 +32,13 @@ export const Landing = ({ onStart, onSettings }) => {
             );
           })}
         </div>
-        <div style={styles.settingsRow}>
-          <button onClick={onSettings} style={{ ...styles.settingsCard, background: theme.surface, border: `0.5px solid ${theme.surfaceBorder}`, fontFamily: theme.font, color: theme.text }}>
-            <div style={{ ...styles.settingsCardLabel, color: theme.textDim }}>LIFE</div>
-            <div style={{ ...styles.settingsCardValueBig, color: theme.text }}>{startingLife}</div>
-          </button>
-          <button onClick={onSettings} style={{ ...styles.settingsCard, background: theme.surface, border: `0.5px solid ${theme.surfaceBorder}`, fontFamily: theme.font, color: theme.text }}>
-            <div style={{ ...styles.settingsCardLabel, color: theme.textDim }}>THEME</div>
-            <div style={{ ...styles.settingsCardValueSmall, color: theme.text }}>{theme.name}</div>
-          </button>
-        </div>
+        <button onClick={onSettings} style={{ ...styles.settingsButton, background: theme.surface, border: `0.5px solid ${theme.surfaceBorder}`, fontFamily: theme.font, color: theme.text }}>
+          <SettingsIcon size={18} strokeWidth={2} style={{ marginRight: 12, color: theme.textMuted }} />
+          <div style={{ flex: 1, textAlign: 'left' }}>
+            <div style={{ fontSize: 14, fontWeight: 500 }}>Game Settings</div>
+            <div style={{ fontSize: 12, marginTop: 2, color: theme.textDim }}>{startingLife} Life • {theme.name} Theme</div>
+          </div>
+        </button>
         <button onClick={onStart} style={{ ...styles.startButton, background: theme.button, color: theme.buttonText, fontFamily: theme.font }}>
           Start game
         </button>
@@ -73,25 +65,9 @@ const styles = {
     flexDirection: 'column',
     height: '100%'
   },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  time: {
-    fontSize: 12,
-    fontVariantNumeric: 'tabular-nums'
-  },
-  iconButton: {
-    background: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    padding: 4,
-    display: 'flex'
-  },
   titleSection: {
     textAlign: 'center',
-    marginTop: 44
+    marginTop: 64
   },
   title: {
     fontSize: 30,
@@ -126,31 +102,15 @@ const styles = {
     transition: 'all 0.15s ease',
     padding: 0
   },
-  settingsRow: {
+  settingsButton: {
     marginTop: 'auto',
+    marginBottom: 16,
     display: 'flex',
-    gap: 8,
-    marginBottom: 12
-  },
-  settingsCard: {
-    flex: 1,
-    padding: '10px 12px',
-    borderRadius: 8,
-    textAlign: 'center',
-    cursor: 'pointer'
-  },
-  settingsCardLabel: {
-    fontSize: 10,
-    letterSpacing: 0.5,
-    marginBottom: 2
-  },
-  settingsCardValueBig: {
-    fontSize: 18,
-    fontWeight: 500
-  },
-  settingsCardValueSmall: {
-    fontSize: 14,
-    fontWeight: 500
+    alignItems: 'center',
+    padding: '12px 16px',
+    borderRadius: 10,
+    cursor: 'pointer',
+    border: 'none',
   },
   startButton: {
     padding: '14px',

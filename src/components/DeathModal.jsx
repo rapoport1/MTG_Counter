@@ -14,8 +14,8 @@ export function DeathModal({ player, onConfirm, onCancel }) {
       <div style={{ ...styles.modal, background: theme.bg, border: `1px solid ${color.border}`, fontFamily: theme.font, color: theme.text }} onClick={(e) => e.stopPropagation()}>
         <Skull size={36} strokeWidth={1.4} style={{ color: theme.danger, marginBottom: 12 }} />
         <div style={styles.title}>Eliminate {player.name}?</div>
-        <div style={{ ...styles.description, color: theme.textDim }}>
-          Player is at 1 life. Confirm elimination, or cancel to keep them in the game. You can undo this if it was a mistake.
+        <div style={{ ...styles.description, color: theme.textDim, fontFamily: theme.font }}>
+          Player has reached a lethal threshold. Confirm elimination, or cancel to keep them in the game. You can undo this if it was a mistake.
         </div>
         <div style={styles.buttonGroup}>
           <button onClick={onConfirm} style={{ ...styles.confirmButton, background: theme.danger, fontFamily: theme.font }}>

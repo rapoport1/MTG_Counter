@@ -76,12 +76,12 @@ export function PlayerSetupRow({ player, onUpdate }) {
         )}
       </div>
 
-      {partnerEnabled && player.commander && (
+      {partnerEnabled && player.commander && player.commander.hasPartner && (
         <div style={styles.partnerSection}>
           {player.partner ? (
             renderCommanderTag(player.partner, 'partner')
           ) : searchingSlot === 'partner' ? (
-            <CommanderSearch onSelect={(c) => handleSelect('partner', c)} onCancel={() => setSearchingSlot(null)} />
+            <CommanderSearch onSelect={(c) => handleSelect('partner', c)} onCancel={() => setSearchingSlot(null)} isPartnerSearch={true} />
           ) : (
             <button onClick={() => setSearchingSlot('partner')} style={{ ...styles.addButton, border: `0.5px dashed ${theme.surfaceBorder}`, color: theme.textMuted, fontFamily: theme.font }}>
               + Add partner commander
