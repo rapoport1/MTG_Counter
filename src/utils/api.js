@@ -12,12 +12,36 @@ export async function tryFetch(url) {
   }
 }
 
+const scryfallCache = new Map();
+const MAX_CACHE_SIZE = 50;
+
+function setCache(key, value) {
+  if (scryfallCache.size >= MAX_CACHE_SIZE) {
+    const firstKey = scryfallCache.keys().next().value;
+    scryfallCache.delete(firstKey);
+  }
+  scryfallCache.set(key, value);
+}
+
 export async function searchScryfall(query) {
+  const cacheKey = query.toLowerCase().trim();
+  if (scryfallCache.has(cacheKey)) {
+    return scryfallCache.get(cacheKey);
+  }
+
   const q = encodeURIComponent(`${query} t:legendary`);
   const res = await tryFetch(`https://api.scryfall.com/cards/search?q=${q}&unique=cards&order=edhrec`);
+  
   if (!res) return { results: [], error: 'unreachable' };
-  if (res.status === 404) return { results: [], error: null };
+  
+  if (res.status === 404) {
+    const emptyResult = { results: [], error: null };
+    setCache(cacheKey, emptyResult);
+    return emptyResult;
+  }
+  
   if (!res.ok) return { results: [], error: 'api_error' };
+  
   try {
     const data = await res.json();
     const results = (data.data || []).slice(0, 6).map((card) => {
@@ -30,7 +54,9 @@ export async function searchScryfall(query) {
         smallUrl: (imgs && imgs.small) || null
       };
     });
-    return { results, error: null };
+    const successResult = { results, error: null };
+    setCache(cacheKey, successResult);
+    return successResult;
   } catch (e) {
     return { results: [], error: 'parse_error' };
   }
