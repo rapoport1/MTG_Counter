@@ -59,6 +59,7 @@ export function PlayerSetupRow({ player, onUpdate }) {
           type="text"
           value={player.name}
           onChange={(e) => onUpdate({ name: e.target.value })}
+          onFocus={(e) => e.target.select()}
           maxLength={20}
           style={{ ...styles.nameInput, color: theme.text, fontFamily: theme.font }}
         />
