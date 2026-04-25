@@ -3,8 +3,11 @@ import { ArrowLeft } from 'lucide-react';
 import { PLAYER_COLORS } from '../constants/players';
 import { ThemeDecoration } from './ui/ThemeDecoration';
 import { PlayerSetupRow } from './PlayerSetupRow';
+import { useSettings } from '../context/SettingsContext';
 
-export function PlayerSetup({ theme, playerCount, toggles, onBack, onBegin }) {
+export function PlayerSetup({ onBack, onBegin }) {
+  const { theme, playerCount } = useSettings();
+
   const [players, setPlayers] = useState(() =>
     Array.from({ length: playerCount }, (_, i) => ({
       id: i,
@@ -34,10 +37,8 @@ export function PlayerSetup({ theme, playerCount, toggles, onBack, onBegin }) {
           {players.map((p) => (
             <PlayerSetupRow
               key={p.id}
-              theme={theme}
               player={p}
               onUpdate={(updates) => updatePlayer(p.id, updates)}
-              partnerEnabled={toggles.partnerCommanders}
             />
           ))}
         </div>

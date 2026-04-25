@@ -2,8 +2,13 @@ import React from 'react';
 import { Skull } from 'lucide-react';
 import { useHoldGesture } from '../hooks/useHoldGesture';
 import { getColor } from '../constants/players';
+import { useSettings } from '../context/SettingsContext';
 
-export function PlayerPanel({ player, displayDelta, rotated, onLifeTick, onTryDie, rapidIncrement, poisonEnabled, area }) {
+export function PlayerPanel({ player, displayDelta, rotated, onLifeTick, onTryDie, area }) {
+  const { toggles } = useSettings();
+  const rapidIncrement = toggles.rapidIncrement;
+  const poisonEnabled = toggles.poisonCounters;
+
   const color = getColor(player.colorId);
   const bgImage = player.commander && player.commander.artUrl;
 

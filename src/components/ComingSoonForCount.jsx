@@ -1,8 +1,11 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 import { ThemeDecoration } from './ui/ThemeDecoration';
+import { useSettings } from '../context/SettingsContext';
 
-export function ComingSoonForCount({ theme, count, onBack }) {
+export function ComingSoonForCount({ count, onBack }) {
+  const { theme } = useSettings();
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', padding: '28px 22px', boxSizing: 'border-box', color: theme.text, fontFamily: theme.font, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', textAlign: 'center' }}>
       <ThemeDecoration theme={theme} />

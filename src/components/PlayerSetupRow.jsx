@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { PLAYER_COLORS, getColor } from '../constants/players';
 import { CommanderSearch } from './CommanderSearch';
+import { useSettings } from '../context/SettingsContext';
 
-export function PlayerSetupRow({ theme, player, onUpdate, partnerEnabled }) {
+export function PlayerSetupRow({ player, onUpdate }) {
+  const { theme, toggles } = useSettings();
+  const partnerEnabled = toggles.partnerCommanders;
+
   const [searchingSlot, setSearchingSlot] = useState(null);
   const color = getColor(player.colorId);
 
@@ -55,7 +59,7 @@ export function PlayerSetupRow({ theme, player, onUpdate, partnerEnabled }) {
             </button>
           </div>
         ) : searchingSlot === 'commander' ? (
-          <CommanderSearch theme={theme} onSelect={(c) => handleSelect('commander', c)} onCancel={() => setSearchingSlot(null)} />
+          <CommanderSearch onSelect={(c) => handleSelect('commander', c)} onCancel={() => setSearchingSlot(null)} />
         ) : (
           <button onClick={() => setSearchingSlot('commander')} style={{ background: 'transparent', border: `0.5px dashed ${theme.surfaceBorder}`, color: theme.textMuted, fontSize: 11, padding: '6px 10px', borderRadius: 6, cursor: 'pointer', fontFamily: theme.font, width: '100%', textAlign: 'left' }}>
             + Add commander
@@ -77,7 +81,7 @@ export function PlayerSetupRow({ theme, player, onUpdate, partnerEnabled }) {
               </button>
             </div>
           ) : searchingSlot === 'partner' ? (
-            <CommanderSearch theme={theme} onSelect={(c) => handleSelect('partner', c)} onCancel={() => setSearchingSlot(null)} />
+            <CommanderSearch onSelect={(c) => handleSelect('partner', c)} onCancel={() => setSearchingSlot(null)} />
           ) : (
             <button onClick={() => setSearchingSlot('partner')} style={{ background: 'transparent', border: `0.5px dashed ${theme.surfaceBorder}`, color: theme.textMuted, fontSize: 11, padding: '6px 10px', borderRadius: 6, cursor: 'pointer', fontFamily: theme.font, width: '100%', textAlign: 'left' }}>
               + Add partner commander

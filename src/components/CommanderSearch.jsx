@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useDebounce } from '../hooks/useDebounce';
 import { searchScryfall, filterPopular } from '../utils/api';
+import { useSettings } from '../context/SettingsContext';
 
-export function CommanderSearch({ theme, onSelect, onCancel }) {
+export function CommanderSearch({ onSelect, onCancel }) {
+  const { theme } = useSettings();
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 300);
   const [state, setState] = useState({ results: filterPopular(''), source: 'popular', error: null, loading: false });

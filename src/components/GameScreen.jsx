@@ -4,11 +4,13 @@ import { PlayerPanel } from './PlayerPanel';
 import { DeathModal } from './DeathModal';
 import { ComingSoonForCount } from './ComingSoonForCount';
 import { getLayout } from '../utils/layout';
+import { useSettings } from '../context/SettingsContext';
 
 const MERGE_WINDOW_MS = 900;
 const DISPLAY_LINGER_MS = 1400;
 
-export function GameScreen({ theme, initialPlayers, toggles, onEndGame }) {
+export function GameScreen({ initialPlayers, onEndGame }) {
+  const { theme, toggles } = useSettings();
   const [players, setPlayers] = useState(initialPlayers);
   const [history, setHistory] = useState([]);
   const [displayDeltas, setDisplayDeltas] = useState({});
@@ -117,7 +119,7 @@ export function GameScreen({ theme, initialPlayers, toggles, onEndGame }) {
 
   const layout = getLayout(players.length);
   if (!layout) {
-    return <ComingSoonForCount theme={theme} count={players.length} onBack={onEndGame} />;
+    return <ComingSoonForCount count={players.length} onBack={onEndGame} />;
   }
 
   const pendingPlayer = pendingDeath != null ? players.find((p) => p.id === pendingDeath) : null;
@@ -136,8 +138,6 @@ export function GameScreen({ theme, initialPlayers, toggles, onEndGame }) {
               area={slot.area}
               onLifeTick={(delta) => onLifeTick(p.id, delta)}
               onTryDie={() => tryDie(p.id)}
-              rapidIncrement={toggles.rapidIncrement}
-              poisonEnabled={toggles.poisonCounters}
             />
           );
         })}
@@ -188,7 +188,7 @@ export function GameScreen({ theme, initialPlayers, toggles, onEndGame }) {
         </div>
       )}
 
-      <DeathModal theme={theme} player={pendingPlayer} onConfirm={confirmDeath} onCancel={cancelDeath} />
+      <DeathModal player={pendingPlayer} onConfirm={confirmDeath} onCancel={cancelDeath} />
     </div>
   );
 }

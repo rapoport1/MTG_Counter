@@ -1,8 +1,11 @@
 import React from 'react';
 import { Skull } from 'lucide-react';
 import { getColor } from '../constants/players';
+import { useSettings } from '../context/SettingsContext';
 
-export function DeathModal({ theme, player, onConfirm, onCancel }) {
+export function DeathModal({ player, onConfirm, onCancel }) {
+  const { theme } = useSettings();
+  
   if (!player) return null;
   const color = getColor(player.colorId);
   return (
