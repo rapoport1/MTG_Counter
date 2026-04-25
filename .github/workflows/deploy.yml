@@ -2,7 +2,7 @@ name: Deploy static content to Pages
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'master']
 
 permissions:
   contents: read
@@ -31,6 +31,8 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Copy privacy policy to dist
+        run: cp privacy_policy.html dist/privacy_policy.html
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
