@@ -66,7 +66,7 @@ export function PlayerPanel({ player, displayDelta, rotated, onLifeTick, onTryDi
     <div
       style={{
         ...styles.container,
-        border: `1px solid ${color.border}`,
+        transform: rotated ? (typeof rotated === 'number' ? `rotate(${rotated}deg)` : 'rotate(180deg)') : 'none',
         transform: rotated ? 'rotate(180deg)' : 'none',
         filter: isDead ? 'grayscale(0.85) brightness(0.55)' : 'none',
         animation: pulseAnim,
